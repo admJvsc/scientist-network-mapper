@@ -17,10 +17,14 @@
             const nodes = new vis.DataSet([{ id: 1, label: data.name }]);
             const edges = new vis.DataSet([]);
 
-            data.coauthors.forEach((c, index) => {
-                nodes.add({ id: index + 2, label: c.label });
-                edges.add({ from: 1, to: index + 2 });
+            data.top_coauthors.forEach((ca, index) => {
+                let nodeId = 100 + index
+                nodes.add({ id: nodeId, label: ca.name, color: '#97C2FC' });
+                edges.add({ from: 1, to: nodeId, label: "współpraca" });
             });
+
+            nodes.add({ id: 999, label: "Cytowania: " + data.total_citations, color: '#FFD700', shape: 'box' });
+            edges.add({ from: 1, to: 999 });
 
             const container = document.getElementById('mynetwork');
             new vis.Network(container, { nodes, edges }, {});
