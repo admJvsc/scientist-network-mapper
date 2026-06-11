@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>#mynetwork { width: 600px; height: 400px; border: 1px solid lightgray; }</style>
+</head>
+<body>
+    <input type="text" id="nazwisko" placeholder="Wpisz imie i nazwisko...">
+    <button onclick="pobierzDane()">Szukaj</button>
+    <div id="mynetwork"></div>
+
+    <script>
+        async function pobierzDane() {
+            const input = document.getElementById('nazwisko').value;
+            const res = await fetch(`/api/naukowiec/${encodeURIComponent(input)}`);
+            const data = await res.json();
+            const nodes = new vis.DataSet([{ id: 1, label: data.name }]);
+            const edges = new vis.DataSet([]);
+
+            data.coauthors.forEach((c, index) => {
+                nodes.add({ id: index + 2, label: c.label });
+                edges.add({ from: 1, to: index + 2 });
+            });
+
+            const container = document.getElementById('mynetwork');
+            new vis.Network(container, { nodes, edges }, {});
+        }
+    </script>
+</body>
+</html>
